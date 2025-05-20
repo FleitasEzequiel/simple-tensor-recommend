@@ -6,15 +6,7 @@
       // Tidy to auto-clean all these tensors
       tf.tidy(() => {
         const users = ['Gant', 'Todd', 'Jed', 'Justin']
-        const bands = [
-          'Nirvana',
-          'Nine Inch Nails',
-          'Backstreet Boys',
-          'N Sync',
-          'Night Club',
-          'Apashe',
-          'STP',
-        ]
+
         const features = [
           'Grunge',
           'Rock',
@@ -65,25 +57,54 @@
   <body>
     <div class="container">
       <h1>Coso</h1>
-      <div>
-        <input type="radio" name="puntos" id="">
-        <input type="radio" name="puntos" id="">
-        <input type="radio" name="puntos" id="">
-        <input type="radio" name="puntos" id="">
-        <input type="radio" name="puntos" id="">
-        <input type="radio" name="puntos" id="">
-        <input type="radio" name="puntos" id="">
-        <input type="radio" name="puntos" id="">
-        <input type="radio" name="puntos" id="">
-        <input type="radio" name="puntos" id="">
+      <div class="puntos">
+        <div name="punto" id="1" class="punto">1</div>
+        <div name="punto" id="2" class="punto">2</div>
+        <div name="punto" id="3" class="punto">3</div>
+        <div name="punto" id="4" class="punto">4</div>
+        <div name="punto" id="5" class="punto">5</div>
+        <div name="punto" id="6" class="punto">6</div>
+        <div name="punto" id="7" class="punto">7</div>
+        <div name="punto" id="8" class="punto">8</div>
+        <div name="punto" id="9" class="punto">9</div>
+        <div name="punto" id="10" class="punto">10</div>
         <button type="button" onclick="guardar()">Enviar</button>
       </div>
     </div>
   </body>
   <script>
+    const bands = [
+          'Nirvana',
+          'Nine Inch Nails',
+          'Backstreet Boys',
+          'N Sync',
+          'Night Club',
+          'Apashe',
+          'STP',
+        ]
+    let banda = 0
+    let puntos = 0
     let preferencias = []
+
+    document.querySelector("h1").textContent = bands[banda]
+    document.querySelectorAll(".punto").forEach((el)=>el.addEventListener("click",(event)=>guardarPuntos(event.target.id)))
+    const guardarPuntos = (p) =>{
+      puntos = parseInt(p)
+      document.querySelectorAll(".punto").forEach((el)=>{
+        if (parseInt(el.id) <= puntos){
+          el.setAttribute("seleccionado",true)
+        }else{
+          el.setAttribute("seleccionado",false)
+        }
+      })
+    }
     const guardar = (event) => {
-      preferencias.push(1)
+      preferencias.push(puntos)
+      banda ++
+      puntos = 0
+      guardarPuntos(0)
+    document.querySelector("h1").textContent = bands[banda]
+    console.log(preferencias)
     }
 
     const calcularPreferencias = () =>{
@@ -103,6 +124,22 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
+    }
+    .puntos{
+      display:flex;
+      flex-direction: row;
+      gap:10px
+    }
+    .punto{
+      background-color: red;
+      width: 8vh;
+      height: 8vh;
+      justify-content: center;
+      display:flex;
+      align-items: center;
+    }
+    [seleccionado = true]{
+      background-color: blue;
     }
   </style>
 </html>
