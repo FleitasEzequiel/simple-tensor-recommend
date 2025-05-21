@@ -7,17 +7,9 @@
       tf.tidy(() => {
         const users = ['Gant', 'Todd', 'Jed', 'Justin']
 
-        const features = [
-          'Grunge',
-          'Rock',
-          'Industrial',
-          'Boy Band',
-          'Dance',
-          'Techno',
-        ]
 
         // User votes <4>
-          //Este es el tensor con las bandas
+          //Este es el tensor con las bandas elegidas por los usuarios
         const user_votes = tf.tensor([
           [10, 9, 1, 1, 8, 7, 8],
           [6, 8, 2, 2, 0, 10, 0],
@@ -26,31 +18,18 @@
         ])
 
         // Music Styles <5>
-          //Este indica si la banda pertenece a un género
-        const band_feats = tf.tensor([
-          [1, 1, 0, 0, 0, 0],
-          [1, 0, 1, 0, 0, 0],
-          [0, 0, 0, 1, 1, 0],
-          [0, 0, 0, 1, 0, 0],
-          [0, 0, 1, 0, 0, 1],
-          [0, 0, 1, 0, 0, 1],
-          [1, 1, 0, 0, 0, 0],
-        ])
 
         // User's favorite styles
-        const user_feats = tf.matMul(user_votes, band_feats)
+        // const user_feats = tf.matMul(user_votes, band_feats)
         // Print the answers
-        user_feats.print()
+        // user_feats.print()
 
         // Let's make them pretty
-        const top_user_features = tf.topk(user_feats, features.length)
+        // const top_user_features = tf.topk(user_feats, features.length)
         // Back to JavaScript
-        const top_genres = top_user_features.indices.arraySync()
+        // const top_genres = top_user_features.indices.arraySync()
         // print the results
-        users.map((u, i) => {
-          const rankedCategories = top_genres[i].map((v) => features[v])
-          console.log(u, rankedCategories)
-        })
+
       })
     </script>
   </head>
@@ -99,16 +78,47 @@
       })
     }
     const guardar = (event) => {
-      preferencias.push(puntos)
-      banda ++
-      puntos = 0
-      guardarPuntos(0)
+      if (banda < bands.length) {banda ++
+        preferencias.push(puntos)
+        puntos = 0
+        guardarPuntos(0)
+      }
+      else calcularPreferencias()
     document.querySelector("h1").textContent = bands[banda]
-    console.log(preferencias)
     }
 
     const calcularPreferencias = () =>{
-      
+
+        const features = [
+          'Grunge',
+          'Rock',
+          'Industrial',
+          'Boy Band',
+          'Dance',
+          'Techno',
+        ]
+
+        //Este indica si la banda pertenece a un género
+        const band_feats = tf.tensor([
+          [1, 1, 0, 0, 0, 0],
+          [1, 0, 1, 0, 0, 0],
+          [0, 0, 0, 1, 1, 0],
+          [0, 0, 0, 1, 0, 0],
+          [0, 0, 1, 0, 0, 1],
+          [0, 0, 1, 0, 0, 1],
+          [1, 1, 0, 0, 0, 0],
+        ])
+        const pref = tf.tensor([
+          preferencias
+        ])
+        const user_feats = tf.matMul(pref, band_feats) 
+
+        const top_user_features = tf.topk(user_feats, features.length)
+        const top_genres = top_user_features.indices.arraySync()
+        top_genres[0].map((g,i)=>{
+          console.log(`TOP ${i} ES ${features[g]}`)
+        })
+        
     }
   </script>
   <style>
